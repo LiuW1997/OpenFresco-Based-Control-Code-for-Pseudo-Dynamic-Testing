@@ -1,1 +1,1 @@
-# OpenFresco-Based-Control-Code-for-Pseudo-Dynamic-Testing
+# Control Code for Pseudo Dynamic Testing
