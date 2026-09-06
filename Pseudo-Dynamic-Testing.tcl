@@ -17,18 +17,12 @@ loadPackage OpenFresco
 # -------------------------
 # node $tag $xCrd $yCrd $mass
 
-# 四节点--------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------
 node  1     0.0    0.0
-# node  2     0.0    2.0  -mass 32653 32653 0.0
-# node  2     0.0    2.0  -mass 40816 40816 0.0
-# node  2     0.0    2.0  -mass 1828 1828 0.0
-# node  2     0.0    2.0  -mass 42644 42644 0.0
 node  2     0.0    2.0  -mass 34481 34481 0.0
 node  3     -1.0    2.0
 node  4     -1.0    0.0  
-# -mass 43794.4 43794.4 0.0
-# -mass 894 894 0.0
-# 四节点--------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------
 
 # set the boundary conditions
 # fix $tag $DX $DY $RZ
@@ -122,7 +116,6 @@ integrator LoadControl 0.1  ;
 
 analysis Static
 
-# 开始重力分析
 set mass_beam [expr 34481]
 set data [list]
 for {set j 0} {$j < $Max_check} {incr j} {
@@ -136,7 +129,6 @@ if {$ok == 0} {
     puts "Gravity analysis succeed."
 }
 
-# 将数据保存到文件
 set outFile [open "./result/deformation_gravity1.txt" "w"]
 foreach row $data {
     puts $outFile "[join $row \t]"
@@ -158,10 +150,8 @@ recorder Element -file ./result/Master_Elmt_Frc2.out     -time -ele 2 forces
 recorder Element -file ./result/Master_Elmt_ctrlDsp.out -time -ele 1 ctrlDisp
 recorder Element -file ./result/Master_Elmt_daqDsp.out  -time -ele 1 daqDisp
 
-# 单元力
 recorder Element -file "./result/bear1_Force.out" -time -ele 1 globalForce
 
-# 基础反力
 recorder Node -file "./result/nodeforce1.out" -time -node 1 -dof 1 2 3 reaction
 recorder Node -file "./result/nodeforce11.out" -time -node 2 -dof 1 2 3 reaction
 recorder Node -file "./result/nodeDisp1.out" -time -node 1 -dof 1 2 3 disp
