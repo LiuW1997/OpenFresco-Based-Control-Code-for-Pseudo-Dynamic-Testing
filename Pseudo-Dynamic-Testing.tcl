@@ -1,7 +1,3 @@
-# 三个墩柱分别输入三种地震波
-# 近场地震波： 3-Northridge(Rinaldi)_0.01s.txt， dt = 0.01s        22-RSN6906-0.722g_0.005s.txt， dt = 0.005s
-# 远场地震波： 21-RSN1113_KOBE_OSA_0.02S.txt， dt = 0.02s
-# 选择不同地震波输入时，设定不同的加载步长，也可以直接选择23000
 
 wipe
 
@@ -95,12 +91,10 @@ element elasticBeamColumn 3 3 4 0.16e0 3.25e0 8e0 3
 
 #-----------------------------------------------------------------------------------------------------
 
-# 清除时间步（重力分析前的准备）
 loadConst -time 0.0
 
-# 重力分析（确定结构初始状态）
 set time_gravity 1
-timeSeries Linear $time_gravity  ;# 构造与时间成线性比例的负载因子
+timeSeries Linear $time_gravity  ;
 
 set pattern_gravity 1
 
@@ -115,16 +109,16 @@ pattern Plain $pattern_gravity $time_gravity {
 		# load  3   0.0  [expr -$P1] 0.0
 }
 
-constraints Plain  ;# 约束方式
-numberer Plain  ;# 自由度编号方式
-system BandGen  ;# 线性方程组求解器
+constraints Plain  ;
+numberer Plain  ;
+system BandGen  ;
 
-set Max_check 10  ;# 最大迭代次数
-test NormDispIncr 1.0e-7 $Max_check 0  ;# 结果收敛性检查
+set Max_check 10  ;
+test NormDispIncr 1.0e-7 $Max_check 0  ;
 
-algorithm KrylovNewton  ;# Newton-Raphson方法
+algorithm KrylovNewton  ;
 
-integrator LoadControl 0.1  ;# 时间步长设定为0.1s
+integrator LoadControl 0.1  ;
 
 analysis Static
 
@@ -181,30 +175,22 @@ recorder Node -file "./result/nodeAccel11.out" -time -node 2 -dof 1 2 3 accel
 
 #-----------------------------------------------------------------------------------------------------
 
-
-# 清除时间步（重力分析前的准备）
-
 loadConst -time 0.0
 
-# 无阻尼
+# 
 set alphaM 2.0272108104392035e-5
 set betaKinit 6.806016777169761e-5
 set betaK 0
 set betaKcomm 0
 rayleigh $alphaM $betaK $betaKinit $betaKcomm
 
-set GM_file "3-Northridge(Rinaldi)_0.01s.txt"
+set GM_file "RSN4098_PARK2004_C01090_0.005_1.33.txt"
 
-set dt [expr 0.01 * 0.4472]
-# 3-Northridge(Rinaldi)_0.01s.txt， dt = 0.01s
-# 22-RSN6906-0.722g_0.005s.txt， dt = 0.005s
-# 21-RSN1113_KOBE_OSA_0.02S.txt， dt = 0.02s
+set dt [expr 0.005 * 0.4472]
 
-# 初始化变量以存储激励数据
 set Excitation {}
 set Excitation_total 0
 
-# 打开文件并读取地震波数据
 set fid [open $GM_file r]
 while {![eof $fid]} {
     gets $fid line
@@ -218,13 +204,13 @@ close $fid
 
 puts "Total number of excitation points: $Excitation_total"
 
-# 创建 accl1 列表，存储时间步长和加速度数据
+
 set accl1 [list]
 for {set j 0} {$j < $Excitation_total} {incr j} {
     lappend accl1 [list [expr $j * $dt] [lindex $Excitation $j]]
 }
 
-# 输出 accl1 数据到文件
+
 set fid_out [open "./result/accl1_output.txt" w]
 foreach item $accl1 {
     set time_step [lindex $item 0]
@@ -235,17 +221,12 @@ close $fid_out
 
 set time_acc 2
 
-# 确保峰值漂移比4% 
-set GM_factor 0.55
-# 3-Northridge(Rinaldi)_0.01s.txt， GM_factor = 0.7
-# 22-RSN6906-0.722g_0.005s.txt， GM_factor = 1
-# 21-RSN1113_KOBE_OSA_0.02S.txt， GM_factor = 6
+
+set GM_factor 3.4
 
 timeSeries Path $time_acc -dt $dt -filePath $GM_file -factor $GM_factor
 
-# 创建 UniformExcitation pattern
 set pattern_GM 2
-# 地震激励的方向
 set direction_GM 1   
 
 pattern UniformExcitation $pattern_GM $direction_GM -accel $time_acc
