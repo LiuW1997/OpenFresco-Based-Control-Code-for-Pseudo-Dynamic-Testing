@@ -75,12 +75,7 @@ geomTransf PDelta 2
 expElement beamColumn 1 1 2 1 -site 1 -initStif 2.6e9 0 0 0 1.04e8 -1.04e8 0 -1.04e8 1.39e8
 # expElement beamColumn 1 1 2 1 -site 1 -initStif 2.9e9 0 0 0 1.15e8 -1.15e8 0 -1.15e8 1.5e8
 
-
 element elasticBeamColumn 2 2 3 0.16e0 3.25e0 8e0 2
-
-
-element elasticBeamColumn 3 3 4 0.16e0 3.25e0 8e0 3
-
 
 #-----------------------------------------------------------------------------------------------------
 
