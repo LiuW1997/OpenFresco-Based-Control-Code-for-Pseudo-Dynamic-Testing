@@ -21,15 +21,14 @@ loadPackage OpenFresco
 node  1     0.0    0.0
 node  2     0.0    2.0  -mass 34481 34481 0.0
 node  3     -1.0    2.0
-node  4     -1.0    0.0  
+
 # --------------------------------------------------------------------------------------------------------
 
 # set the boundary conditions
 # fix $tag $DX $DY $RZ
 fix 1   1  1  1
 fix 2   0  0  0
-fix 3   0  0  0
-fix 4   1  1  1
+fix 3   1  1  1
 
 #-----------------------------------------------------------------------------------------------------
 
@@ -63,9 +62,9 @@ expSite LocalSite 1 1
 # --------------------------------
 # geomTransf Linear $transfTag
 # geomTransf PDelta 1
-geomTransf Linear 1
-geomTransf Linear 2
-geomTransf Linear 3
+geomTransf PDelta 1
+geomTransf PDelta 2
+
 
 # Define experimental element
 # ---------------------------
